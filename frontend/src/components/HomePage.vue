@@ -154,7 +154,7 @@ export default {
     async fetchUsers() {
       try {
         //const response = await fetch("http://localhost:8080/users");
-        const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/users");
+        const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/users");
         if (!response.ok) {
           throw new Error("Fehler beim Laden der Benutzer");
         }
