@@ -153,7 +153,8 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await fetch("http://localhost:8080/users");
+        //const response = await fetch("http://localhost:8080/users");
+        const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/users");
         if (!response.ok) {
           throw new Error("Fehler beim Laden der Benutzer");
         }
@@ -224,7 +225,8 @@ export default {
           return;
         }
 
-        const response = await fetch(`http://localhost:8080/api/${userId}/items`, {
+       // const response = await fetch(`http://localhost:8080/api/${userId}/items`,
+            const response = await fetch(`https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/${userId}/items`,{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
