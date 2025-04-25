@@ -20,7 +20,8 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
                         //.allowedOrigins("http://localhost:3000")
-                        .allowedOrigins("https://cerulean-pixie-7723ca.netlify.app")
+                        .allowedOrigins("https://imp-webapp.netlify.app")
+                        .allowedOrigins("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
