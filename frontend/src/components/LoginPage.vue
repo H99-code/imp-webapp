@@ -45,8 +45,6 @@
 </template>
 
 <script>
-
-
 export default {
   data() {
     return {
@@ -56,11 +54,11 @@ export default {
       errorMessage: '',
       usernameRules: [
         v => !!v || 'Username is required',
-        v => (v && v.length >= 3) || 'Username muss länger als 3 Zeichen sein'
+        v => (v && v.length >= 3) || 'Username must be at least 3 characters'
       ],
       passwordRules: [
         v => !!v || 'Password is required',
-        v => (v && v.length >= 3) || 'Password muss länger als 3 Zeichen sein'
+        v => (v && v.length >= 3) || 'Password must be at least 3 characters'
       ]
     };
   },
@@ -80,23 +78,20 @@ export default {
       }
 
       try {
-        // const response = await fetch("http://localhost:8080/api/login",
         const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/login", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: this.username,
             password: this.password
           })
         });
 
-
-        const result = await response.json();
-
+        // Überprüfen, ob die Antwort OK ist
         if (!response.ok) {
+          const result = await response.json();
           throw new Error(result.message || "Login fehlgeschlagen");
         }
-
 
         alert("Login erfolgreich!");
         this.$router.push('/home');

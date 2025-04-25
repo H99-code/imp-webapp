@@ -45,9 +45,6 @@
 </template>
 
 <script>
-
-
-
 export default {
   name: "RegistrationPage",
   data() {
@@ -58,16 +55,16 @@ export default {
       errorMessage: "",
       isValid: false,
       usernameRules: [
-        (v) => !!v || "Username is required",
-        (v) => (v && v.length >= 3) || "Username must be at least 3 characters",
+        v => !!v || "Username is required",
+        v => (v && v.length >= 3) || "Username must be at least 3 characters",
       ],
       passwordRules: [
-        (v) => !!v || "Password is required",
-        (v) => (v && v.length >= 6) || "Password must be at least 6 characters",
+        v => !!v || "Password is required",
+        v => (v && v.length >= 6) || "Password must be at least 6 characters",
       ],
       emailRules: [
-        (v) => !!v || "Email is required",
-        (v) => /.+@.+\..+/.test(v) || "Enter a valid email",
+        v => !!v || "Email is required",
+        v => /.+@.+\..+/.test(v) || "Enter a valid email",
       ],
     };
   },
@@ -82,10 +79,9 @@ export default {
       }
 
       try {
-       // const response = await fetch("http://localhost:8080/api/register",
-        const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/register",{
+        const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/register", {
           method: "POST",
-          headers: {"Content-Type": "application/json"},
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             username: this.username,
             email: this.email,

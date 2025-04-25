@@ -2,8 +2,6 @@
   <div>
     <TopBar @toggle-drawer="drawer = !drawer" />
     <NavigationDrawer v-model="drawer"></NavigationDrawer>
-    <!--<WelcomeDialog :dialog="openWelcomeDialog"></WelcomeDialog> -->
-
 
     <v-container>
       <v-row>
@@ -28,7 +26,7 @@
               <tbody>
               <tr v-for="(item, index) in filteredItems" :key="index">
                 <td>{{ item.name }}</td>
-                <td>{{ item.price}}</td>
+                <td>{{ item.price }}</td>
                 <td><a :href="item.link" target="_blank">{{ item.link }}</a></td>
                 <td>{{ item.type }}</td>
                 <td><v-chip>{{ item.status }}</v-chip></td>
@@ -40,7 +38,6 @@
             </v-table>
           </v-card>
         </v-col>
-
 
         <v-col cols="4">
           <v-card class="pa-4" elevation="13">
@@ -57,6 +54,7 @@
               </v-btn>
             </v-card-text>
           </v-card>
+
           <v-col cols="6"></v-col>
           <v-card class="pa-4">
             <ChatView ref="chatComponent" />
@@ -72,13 +70,7 @@
           <v-text-field v-model="newItem.name" label="Item" :rules="itemRules"></v-text-field>
           <v-text-field v-model="newItem.link" label="Link" :rules="linkRules"></v-text-field>
 
-          <v-text-field
-              v-model="newItem.price"
-              label="Price"
-
-          >
-
-          </v-text-field>
+          <v-text-field v-model="newItem.price" label="Price"></v-text-field>
 
           <v-autocomplete
               v-model="newItem.type"
@@ -101,17 +93,13 @@
 import ChatView from "@/components/ChatView.vue";
 import TopBar from "@/components/TopBar.vue";
 import NavigationDrawer from "@/components/NavigationDrawer.vue";
-//import WelcomeDialog from "@/components/WelcomeDialog.vue";
-
 
 export default {
   data() {
     return {
       activeTab: 0,
       openAddItemDialog: false,
-      newItem: { name: "", link: "", type: "", price: "" }
-      ,
-
+      newItem: { name: "", link: "", type: "", price: "" },
       selectedItems: [],
       users: [],
       openWelcomeDialog: true,
@@ -122,12 +110,10 @@ export default {
     };
   },
   components: {
-    //WelcomeDialog,
     NavigationDrawer,
     ChatView,
     TopBar,
   },
-
   computed: {
     filteredItems() {
       return this.currentUser?.items ?? [];
@@ -136,7 +122,6 @@ export default {
       return this.users[this.activeTab] ?? { items: [] };
     }
   },
-
   watch: {
     activeTab() {
       this.fetchItem();
@@ -149,19 +134,23 @@ export default {
       await this.fetchItem();
     }
   },
-
   methods: {
     async fetchUsers() {
       try {
-        //const response = await fetch("http://localhost:8080/users");
         const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/users");
         if (!response.ok) {
           throw new Error("Fehler beim Laden der Benutzer");
         }
+
+        // Überprüfe, ob die Antwort JSON ist
+        if (!response.headers.get('content-type').includes('application/json')) {
+          throw new Error('Die Antwort war nicht im JSON-Format');
+        }
+
         const data = await response.json();
-        this.users = data._embedded.users.map(users => ({
-          ...users,
-          uuid: users._links.self.href.split('/').pop()
+        this.users = data.users.map(user => ({
+          ...user,
+          uuid: user.id
         }));
       } catch (error) {
         console.error("Fehler beim Abrufen der Benutzerdaten:", error);
@@ -171,62 +160,37 @@ export default {
       try {
         const currentUser = this.users[this.activeTab];
 
-        if (!currentUser || !currentUser._links || !currentUser._links.items) {
-          console.warn("Kein Benutzer ausgewählt oder keine Items-URL vorhanden");
+        if (!currentUser || !currentUser.items) {
+          console.warn("Kein Benutzer ausgewählt oder keine Items vorhanden");
           return;
         }
 
-        const response = await fetch(currentUser._links.items.href);
-
-        console.log("Status der Antwort:", response.status);
-
+        const response = await fetch(currentUser.items.href);
         if (!response.ok) throw new Error("Fehler beim Abrufen der Items");
 
         const data = await response.json();
-        console.log("Antwortdaten:", data);
-
-        if (!data._embedded || !data._embedded.items) {
+        if (!data.items) {
           console.warn("Keine Items vorhanden");
           this.users[this.activeTab].items = [];
           return;
         }
 
-        this.users[this.activeTab].items = data._embedded.items;
+        this.users[this.activeTab].items = data.items;
       } catch (error) {
         console.error("Fehler beim Abrufen der Items:", error);
         alert("Es gab ein Problem beim Laden der Items. Bitte versuche es später noch einmal.");
       }
     },
 
-
-
-
-
-
-
-
-
     async addItem() {
       try {
-        console.log("Aktiver Tab:", this.activeTab);
-
         const currentUser = this.users[this.activeTab];
-
-        console.log("Aktueller Benutzer:", currentUser);
-
-        if (!currentUser || !currentUser._links || !currentUser._links.items) {
-          console.warn("Kein Benutzer ausgewählt oder keine Items-URL vorhanden");
+        if (!currentUser) {
+          console.warn("Kein Benutzer ausgewählt");
           return;
         }
 
-        const userId = currentUser.uuid;
-        if (!userId) {
-          console.warn("Keine gültige User ID gefunden");
-          return;
-        }
-
-       // const response = await fetch(`http://localhost:8080/api/${userId}/items`,
-            const response = await fetch(`https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/${userId}/items`,{
+        const response = await fetch(`https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/${currentUser.uuid}/items`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -239,37 +203,20 @@ export default {
           })
         });
 
-        console.log("Status der Antwort:", response.status);
-
         if (!response.ok) throw new Error("Fehler beim Hinzufügen des Items");
 
         const data = await response.json();
-        console.log("Antwortdaten:", data);
-
         if (data.success && data.item) {
           currentUser.items.push(data.item);
-
-
         }
 
         this.resetNewItem();
-
-
         this.openAddItemDialog = false;
-
       } catch (error) {
         console.error("Fehler beim Hinzufügen des Items:", error);
         alert("Es gab ein Problem beim Hinzufügen des Items. Bitte versuche es später noch einmal.");
-      } finally {
-
-        this.openAddItemDialog = false;
       }
-    }
-
-
-    ,
-
-
+    },
 
     deleteSelectedItems() {
       const currentUser = this.users[this.activeTab];
@@ -288,8 +235,8 @@ export default {
     },
 
     resetNewItem() {
-      this.newItem = {name: "", price: [], link: "", type: "", status: ""};
+      this.newItem = { name: "", price: "", link: "", type: "", status: "" };
     }
   }
-}
+};
 </script>

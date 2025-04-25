@@ -32,7 +32,7 @@ public class SecurityConfig {
 
         // List allowed origins
         configuration.setAllowedOrigins(List.of(
-                "https://giftaimp.netlify.app",
+                "https://impii.netlify.app",
                 "https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app"
         ));
 
