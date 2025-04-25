@@ -138,24 +138,35 @@ export default {
     async fetchUsers() {
       try {
         const response = await fetch("https://5ade-2a01-41e3-2320-2500-41b4-734d-a746-9d87.ngrok-free.app/api/users");
+
+        // Wenn die Antwort nicht OK ist, werfe einen Fehler
         if (!response.ok) {
           throw new Error("Fehler beim Laden der Benutzer");
         }
 
-        // Überprüfe, ob die Antwort JSON ist
+        // Logge die Antwort als Text, falls etwas im JSON-Parsing schiefgeht
+        const responseText = await response.text();
+        console.log("Antwort Text:", responseText);  // Logge die gesamte Antwort als Text
+
+        // Überprüfe, ob die Antwort tatsächlich im JSON-Format ist
         if (!response.headers.get('content-type').includes('application/json')) {
           throw new Error('Die Antwort war nicht im JSON-Format');
         }
 
-        const data = await response.json();
+        // Parst die Antwort als JSON
+        const data = JSON.parse(responseText);
+
+        // Jetzt kannst du sicher auf die Daten zugreifen
         this.users = data.users.map(user => ({
           ...user,
           uuid: user.id
         }));
       } catch (error) {
         console.error("Fehler beim Abrufen der Benutzerdaten:", error);
+        this.errorMessage = error.message;
       }
     },
+
     async fetchItem() {
       try {
         const currentUser = this.users[this.activeTab];

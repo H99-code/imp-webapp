@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:3000")
-@CrossOrigin(origins = "https://impii.netlify.app")
+@CrossOrigin(origins = "https://impiii.netlify.app")
 @RequestMapping("/api")
 public class UserController {
 
@@ -22,7 +22,7 @@ public class UserController {
 
 
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @PostMapping("/{userId}/items")
     public ResponseEntity<?> addItemToUser(@PathVariable String userId, @RequestBody Item item) {
         System.out.println("Item hinzufügen für User ID: " + userId + ", Item: " + item);
@@ -71,14 +71,14 @@ public class UserController {
 
 
    // @CrossOrigin(origins = "http://localhost:3000")
-   @CrossOrigin(origins = "https://impii.netlify.app")
+   @CrossOrigin(origins = "https://impiii.netlify.app")
     @DeleteMapping("/{userId}/items/{itemId}")
     public ResponseEntity<?> deleteItemFromUser(@PathVariable String userId, @PathVariable Long itemId) {
         userService.deleteItemFromUser(userId, itemId);
         return ResponseEntity.ok().build();
     }
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @GetMapping("/{userId}/items")
     public ResponseEntity<?> getUserItems(@PathVariable String userId) {
         try {
@@ -104,7 +104,7 @@ public class UserController {
 
 
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers() {
         try {
@@ -129,7 +129,7 @@ public class UserController {
 
 
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
         try {
@@ -151,7 +151,7 @@ public class UserController {
         }
     }
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
@@ -174,7 +174,7 @@ public class UserController {
 
 
     //@CrossOrigin(origins = "http://localhost:3000")
-    @CrossOrigin(origins = "https://impii.netlify.app")
+    @CrossOrigin(origins = "https://impiii.netlify.app")
     @GetMapping("/hash-passwords")
     public ResponseEntity<?> hashPasswords() {
         try {
